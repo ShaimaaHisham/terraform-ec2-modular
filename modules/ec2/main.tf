@@ -1,0 +1,19 @@
+resource "aws_instance" "this" {
+  ami           = var.ami
+  instance_type = var.instance_type
+  subnet_id     = var.subnet_id
+  key_name      = var.key_name
+  vpc_security_group_ids = [var.sg_id]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo yum update -y
+              sudo amazon-linux-extras install nginx1 -y
+              sudo systemctl start nginx
+              sudo systemctl enable nginx
+              echo "<h1>Hello from Isa's modular EC2 project!</h1>" | sudo tee /usr/share/nginx/html/index.html
+              EOF
+
+  tags = { Name = "modular-ec2" }
+}
+
